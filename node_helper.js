@@ -3,7 +3,7 @@
  *
  * By kjb085 https://github.com/kjb085/MMM-Reddit
  */
-const fetch = require('node-fetch');
+//const fetch = require('node-fetch');
 const NodeHelper = require('node_helper');
 
 module.exports = NodeHelper.create({
