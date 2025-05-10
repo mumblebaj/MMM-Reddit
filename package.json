@@ -7,6 +7,11 @@
     "build-css": "node-sass --include-path scss assets/MMM-Reddit.scss assets/MMM-Reddit.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""
   },
+    "keywords": [
+    "MagicMirror",
+    "Reddit",
+    "News"
+  ],
   "author": "mumblebaj",
   "license": "MIT"
 }
