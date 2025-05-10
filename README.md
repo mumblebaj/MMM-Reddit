@@ -1,22 +1,24 @@
 # MMM-Reddit #
 
-This module is used to show top level reddit info for Magic Mirror<sup>2</sup>.
+[![Platform](https://img.shields.io/badge/platform-MagicMirror-informational)](https://MagicMirror.builders)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
+
+## Support
+If you like the module you can support my work by giving me a star or buy me a coffee.
+
+<a href="https://www.buymeacoffee.com/mumblebaj" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 45px !important;width: 180px !important;" ></a>
+
+This module is used to show top level reddit info for MagicMirror²<sup>2</sup>.
 
 It is highly configurable and primarily allows users to choose between two display types, the number of posts pull from reddit, how many of those posts to display, how often to cycle through the set of posts, and how frequently to refresh posts from reddit.
 
-## NOTE ## 
-
-Currently working on a large refactor that will allow multiple instances of the module to run simultaneously. Please submit feature requests as issues tagged as an enchancement and please list the title as "v2: [your suggestion]".
-
-Project ETA completion: holiday 2020
-
 ## End User Dependencies ##
 
-Just an installation of [Magic Mirror<sup>2</sup>](https://github.com/MichMich/MagicMirror) and a working internet connection.
+Just an installation of [MagicMirror²<sup>2</sup>](https://github.com/MagicMirrorOrg/MagicMirror) and a working internet connection.
 
 ## Installation ##
 
-1. Run `git clone https://github.com/kjb085/MMM-Reddit.git` in the directory `~/MagicMirror/modules`
+1. Run `git clone https://github.com/mumblebaj/MMM-Reddit.git` in the directory `~/MagicMirror/modules`
 2. Add MMM-Reddit to your config file `~/MagicMirror/config/config.js`
 
 ```
@@ -113,24 +115,3 @@ Option  | Default | Description
 Option  | Default | Description
 ------- | ------- | -------------
 `showThumbnail` | `false` | Show the thumbnails of posts. This attribute is also included in `showAll`.
-
-## Dev Dependencies ##
-
-If you plan on modifying the existing code, these tools will be helpful as the the css was created using sass. Once you have npm installed, simply run `npm install` for the subsequent npm packages to be installed.
-
-* node-sass
-* nodemon
-
-**Note**: To make use of the installed packages run `npm run build-css` to compile scss to css and running `npm run watch-css` will watch the scss file for changes and compile on save.
-
-## To Do ##
-
-There is no timeline or guarantee than any of these will be accomplished. Will throughly review and test pull requests if anyone else wants to take any of these on.
-
-* Write tests
-* Allow widths other than pixels
-* Add `gif` option as display type
-  * Not sure if there's going to be a way to do this to ensure that the rotate doesn't fire before the gif is finished playing
-* Add feature to display portion of text posts for subs such as r/dadjokes
-* Add ability to allow user defined post ids for curated slideshow
-* Add ability to query a subreddit(s) for a given phrase and return top hits

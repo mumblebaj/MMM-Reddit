@@ -1,15 +1,12 @@
 {
   "name": "mmm-reddit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Magic Mirror Module to display content from reddit",
   "main": "MMM-Reddit.js",
   "scripts": {
     "build-css": "node-sass --include-path scss assets/MMM-Reddit.scss assets/MMM-Reddit.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""
   },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "node-fetch": "^2.6.1"
-  }
+  "author": "mumblebaj",
+  "license": "MIT"
 }
