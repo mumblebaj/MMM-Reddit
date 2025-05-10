@@ -8,7 +8,7 @@ If you like the module you can support my work by giving me a star or buy me a c
 
 <a href="https://www.buymeacoffee.com/mumblebaj" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 45px !important;width: 180px !important;" ></a>
 
-This module is used to show top level reddit info for MagicMirror²<sup>2</sup>.
+This module is used to show top level reddit info for MagicMirror².
 
 It is highly configurable and primarily allows users to choose between two display types, the number of posts pull from reddit, how many of those posts to display, how often to cycle through the set of posts, and how frequently to refresh posts from reddit.
 
