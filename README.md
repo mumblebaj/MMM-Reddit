@@ -39,14 +39,23 @@ Just an installation of [MagicMirror²<sup>2</sup>](https://github.com/MagicMirr
 
 ```
 config: {
-	subreddit: 'earthporn',
-	displayType: 'image',
-	imageQuality: 'high',
-	count: 10,
-	show: 1,
-	width: 500,
-	showAll: true,
-}
+            module: "MMM-Reddit",
+            position: "bottom_left",
+            disabled: false,
+            config: {
+                subreddit: ['television', 'science', 'nottheonion'],
+                headerType: 'chained',
+                displayType: 'image',
+                count: 14,
+                show: 1,
+                width: 400,
+                showAll: true,
+                showScore: false,
+                showSubreddit: true,
+                colorText: false,
+                showThumbnail: false,
+            }
+        }
 ```
 
 #### Display Type: Headlines ####

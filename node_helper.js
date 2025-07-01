@@ -1,8 +1,9 @@
 /* Magic Mirror
  * Module: MMM-Reddit
  *
+ * By kjb085 https://github.com/kjb085/MMM-Reddit
  */
-
+//const fetch = require('node-fetch');
 const NodeHelper = require('node_helper');
 
 module.exports = NodeHelper.create({
@@ -56,46 +57,52 @@ module.exports = NodeHelper.create({
      *
      * @return {void}
      */
-    async getData () {
-        let url = this.getUrl(this.config),
-            posts = [],
-            body;
+async getData() {
+    try {
+        const url = this.getUrl(this.config);
+        const response = await fetch(url);
 
-            var response = await fetch(url)
-            if (!response.status === 200) {
-                console.log(`Error fetching country stats: ${response.statusCode} ${response.statusText}`)
-            }
+        if (!response.ok) {
+            console.error(`Error fetching Reddit data: ${response.status} ${response.statusText}`);
+            this.sendError(`Error fetching Reddit data: ${response.status}`);
+            return;
+        }
 
-            body = await response.json()
-            if (typeof body.data !== "undefined") {
-                if (typeof body.data.children !== "undefined") {
-                    body.data.children.forEach((post) => {
-                        let temp = {};
+        const body = await response.json();
 
-                        temp.title = this.formatTitle(post.data.title);
-                        temp.score = post.data.score;
-                        temp.thumbnail = post.data.thumbnail;
-                        temp.src = this.getImageUrl(post.data.preview, post.data.thumbnail),
-                        temp.gilded = post.data.gilded;
-                        temp.num_comments = post.data.num_comments;
-                        temp.subreddit = post.data.subreddit;
-                        temp.author = post.data.author;
+        if (!body?.data?.children) {
+            this.sendError('No posts returned. Ensure the subreddit name is spelled correctly. Private subreddits are also inaccessible.');
+            return;
+        }
 
-                        // Skip image posts that do not have images
-                        if (this.config.displayType !== 'image' || temp.src !== null) {
-                            posts.push(temp);
-                        }
-                    });
+        const posts = body.data.children
+            .filter(post => {
+                const thumbnail = post.data.thumbnail;
+                const hasValidThumbnail = typeof thumbnail === 'string' && thumbnail.startsWith('http');
+                const imageSrc = this.getImageUrl(post.data.preview, thumbnail);
+                const isImageValid = this.config.displayType !== 'image' || imageSrc !== null;
 
-                    this.sendData({posts: posts});
-                } else {
-                    this.sendError('No posts returned. Ensure the subreddit name is spelled correctly. ' +
-                        'Private subreddits are also inaccessible');
-                }
-            } else {
-                this.sendError(['Invalid response body', body]);
-            }
-    },
+                return hasValidThumbnail && isImageValid;
+            })
+            .map(post => ({
+                title: this.formatTitle(post.data.title),
+                score: post.data.score,
+                thumbnail: post.data.thumbnail,
+                src: this.getImageUrl(post.data.preview, post.data.thumbnail),
+                gilded: post.data.gilded,
+                num_comments: post.data.num_comments,
+                subreddit: post.data.subreddit,
+                author: post.data.author
+            }));
+
+        this.sendData({ posts });
+
+    } catch (err) {
+        console.error('Reddit fetch failed:', err);
+        this.sendError('An error occurred while fetching Reddit data.');
+    }
+},
+
 
     /**
      * Get reddit URL based on user configuration
