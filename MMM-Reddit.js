@@ -260,23 +260,15 @@ Module.register('MMM-Reddit', {
      * @param  {Number} toShow
      * @return {Array}
      */
-	 getPostSets(posts, toShow) {
-		let sets = [];
+    getPostSets(posts, toShow) {
+        const sets = [];
 
-		for (let i = 0; i < posts.length; i += toShow) {
-			let temp = [];
+        for (let i = 0; i < posts.length; i += toShow) {
+            sets.push(posts.slice(i, i + toShow));
+        }
 
-			for (let ii = i; ii < i + toShow; ii++) {
-				if (posts[ii]) {
-					temp.push(posts[ii]);
-				}
-			}
-
-			sets.push(temp);
-		}
-
-		return sets;
-	},
+        return sets;
+    },
 
     /**
      * Return a string to be used as header text
