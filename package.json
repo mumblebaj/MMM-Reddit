@@ -1,6 +1,6 @@
 {
   "name": "mmm-reddit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Magic Mirror Module to display content from reddit",
   "main": "MMM-Reddit.js",
   "scripts": {
