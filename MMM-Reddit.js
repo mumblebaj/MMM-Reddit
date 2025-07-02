@@ -260,25 +260,23 @@ Module.register('MMM-Reddit', {
      * @param  {Number} toShow
      * @return {Array}
      */
-    getPostSets (posts, toShow) {
-        let sets = [];
+	 getPostSets(posts, toShow) {
+		let sets = [];
 
-        // NOTE: Refactored away from using a while (posts.length) { sets.push(posts.splice(0, toShow))}
-        // due to a weird variable hoisting/variables passing by reference
-        // caused the payload posts array to be empty, despite posts rendering as expected
-        // Effectively, we leave this hear for future debugging purposes
-        for (let i = 0; i < posts.length; i += toShow) {
-            let temp = [];
+		for (let i = 0; i < posts.length; i += toShow) {
+			let temp = [];
 
-            for (let ii = i; ii < i + toShow; ii++) {
-                temp.push(posts[ii]);
-            }
+			for (let ii = i; ii < i + toShow; ii++) {
+				if (posts[ii]) {
+					temp.push(posts[ii]);
+				}
+			}
 
-            sets.push(temp);
-        }
+			sets.push(temp);
+		}
 
-        return sets;
-    },
+		return sets;
+	},
 
     /**
      * Return a string to be used as header text
