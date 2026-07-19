@@ -33,6 +33,32 @@ Just an installation of [MagicMirror²<sup>2</sup>](https://github.com/MagicMirr
 
 ## Examples ##
 
+### Reddit OAuth setup ###
+
+Reddit may block unauthenticated `.json` requests from non-browser applications. MMM-Reddit can request and refresh an app-only OAuth token automatically when you provide Reddit app credentials.
+
+1. Go to [Reddit app preferences](https://www.reddit.com/prefs/apps).
+2. Choose **create another app**.
+3. Select **script** as the app type. This is the best fit for a MagicMirror module running on your own machine.
+4. Set the name to something descriptive, such as `MMM-Reddit`.
+5. Set both URL fields to `http://localhost`. They are not used for app-only reads, but Reddit requires values.
+6. Save the app.
+7. Copy the app ID shown under the app name into `redditClientId`.
+8. Copy the secret into `redditClientSecret`.
+
+Example:
+
+```
+config: {
+    subreddit: ['television', 'science', 'nottheonion'],
+    type: 'hot',
+    count: 14,
+    redditUserAgent: 'MagicMirror:MMM-Reddit:v1.2.1 (by /u/your_reddit_username)',
+    redditClientId: 'your_reddit_app_id',
+    redditClientSecret: 'your_reddit_app_secret'
+}
+```
+
 #### Display Type: Image ####
 
 ![images](https://i.imgur.com/dvfqHiS.png)
@@ -93,6 +119,10 @@ Option  | Default | Description
 `rotateInterval` | `30` | Number of seconds until the posts currently being displayed is substituted by the subsequent set.
 `characterLimit` | `false` | Set a character limit for post titles. Titles that are truncated will have "..." appended to the title to indicate it.
 `titleReplacements` | `[]` | An array of objects used to make replacements to words or phrases in a title. Title replacements will occur prior to the character limit being enforced, so these can be used to help shorten post titles or just for fun.<br><br>**Example:** `[{toReplace: 'millennials', replacement: 'snake people', caseSensitive: false'}, {toReplace: 'politicians', replacement: 'lizard people'}]`<br><br>**Note:** `caseSensitive` defaults to true. Also accepts regular expressions for advanced find and replace, but do not include preceding and trailing forward slashes. For those not familiar with regular expressions, see [here](https://regexr.com/).
+`redditUserAgent` | `MagicMirror:MMM-Reddit:v1.2.1 (by /u/mumblebaj)` | User-Agent header sent with requests to Reddit. Reddit expects API clients to identify themselves with a unique, descriptive User-Agent. It is recommended that you override this with your own Reddit username, for example `MagicMirror:MMM-Reddit:v1.2.1 (by /u/your_reddit_username)`.
+`redditClientId` | `null` | Optional Reddit app ID. When this and `redditClientSecret` are set, the module automatically requests an app-only OAuth token and uses `https://oauth.reddit.com` for Reddit data.
+`redditClientSecret` | `null` | Optional Reddit app secret for app-only OAuth. Use a Reddit app with the **script** app type for a personal MagicMirror installation.
+`redditAccessToken` | `null` | Optional OAuth bearer token for Reddit requests. Prefer `redditClientId` and `redditClientSecret` so the module can refresh tokens automatically. Tokens expire, so this manual value must be refreshed outside of this module.
 `forceImmediateUpdate` | `true` | When set to `true`, as soon as posts are received from reddit according to the updateInterval, posts are immediately rendered, regardless of what is currently on screen. When set to `false`, the module will allow the existing set to finish and the new \#1 post will be from the updated set of posts.<br><br><b>Note:</b> If this is set to `false`, it's a good idea to try to keep the show &amp; count, rotateInterval, and updateInterval in good sync with this. For example, if you're using images, displaying 1 image with a count of 10 posts rotating every 30 seconds, it will take 5 minutes to cycle through a set. Therefore, ideally you'll want to set your updateInterval to a mutiple of 5 so that it's not waiting too long to update the posts as your update will appear somewhat inconsistent.
 
 #### Secondary ####

@@ -15,6 +15,24 @@ module.exports = NodeHelper.create({
     baseUrl: 'https://www.reddit.com/',
 
     /**
+     * OAuth base url for authenticated requests
+     * @type {String}
+     */
+    oauthBaseUrl: 'https://oauth.reddit.com/',
+
+    /**
+     * Reddit token url
+     * @type {String}
+     */
+    tokenUrl: 'https://www.reddit.com/api/v1/access_token',
+
+    /**
+     * Cached OAuth token
+     * @type {Object|null}
+     */
+    oauthToken: null,
+
+    /**
      * List of image qualities in ascending order
      * @type {Array}
      */
@@ -59,8 +77,9 @@ module.exports = NodeHelper.create({
      */
 async getData() {
     try {
-        const url = this.getUrl(this.config);
-        const response = await fetch(url);
+        const requestOptions = await this.getRequestOptions(this.config);
+        const url = this.getUrl(this.config, !!requestOptions.headers.Authorization);
+        const response = await fetch(url, requestOptions);
 
         if (!response.ok) {
             console.error(`Error fetching Reddit data: ${response.status} ${response.statusText}`);
@@ -103,6 +122,104 @@ async getData() {
     }
 },
 
+    /**
+     * Build Reddit request headers.
+     *
+     * @param  {Object} config
+     * @return {Object}
+     */
+    async getRequestOptions (config) {
+        const accessToken = config.redditAccessToken || await this.getOAuthAccessToken(config);
+        const headers = {
+            Accept: 'application/json',
+            'User-Agent': config.redditUserAgent || 'MagicMirror:MMM-Reddit:v1.2.1 (by /u/mumblebaj)',
+        };
+
+        if (accessToken) {
+            headers.Authorization = `Bearer ${accessToken}`;
+        }
+
+        return { headers };
+    },
+
+    /**
+     * Get a cached app-only OAuth token, or request a new one.
+     *
+     * @param  {Object} config
+     * @return {String|null}
+     */
+    async getOAuthAccessToken (config) {
+        if (!this.hasOAuthConfig(config)) {
+            return null;
+        }
+
+        if (this.oauthToken && this.oauthToken.expiresAt > Date.now()) {
+            return this.oauthToken.accessToken;
+        }
+
+        const token = await this.requestAppOnlyToken(config);
+
+        this.oauthToken = token;
+
+        return token.accessToken;
+    },
+
+    /**
+     * Determine whether app-only OAuth can be used.
+     *
+     * @param  {Object} config
+     * @return {Boolean}
+     */
+    hasOAuthConfig (config) {
+        return !!(config.redditClientId && config.redditClientSecret);
+    },
+
+    /**
+     * Request an app-only OAuth token from Reddit.
+     *
+     * @param  {Object} config
+     * @return {Object}
+     */
+    async requestAppOnlyToken (config) {
+        const response = await fetch(this.tokenUrl, {
+            method: 'POST',
+            headers: {
+                Authorization: this.getBasicAuth(config.redditClientId, config.redditClientSecret),
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': config.redditUserAgent || 'MagicMirror:MMM-Reddit:v1.2.1 (by /u/mumblebaj)',
+            },
+            body: 'grant_type=client_credentials',
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+
+            throw new Error(`Reddit OAuth token request failed: ${response.status} ${response.statusText} ${errorBody}`);
+        }
+
+        const body = await response.json();
+
+        if (!body.access_token) {
+            throw new Error('Reddit OAuth token response did not include an access token.');
+        }
+
+        return {
+            accessToken: body.access_token,
+            expiresAt: Date.now() + ((body.expires_in || 3600) - 60) * 1000,
+        };
+    },
+
+    /**
+     * Build the token request Basic auth header.
+     *
+     * @param  {String} clientId
+     * @param  {String} clientSecret
+     * @return {String}
+     */
+    getBasicAuth (clientId, clientSecret) {
+        return `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`;
+    },
+
 
     /**
      * Get reddit URL based on user configuration
@@ -110,8 +227,8 @@ async getData() {
      * @param  {Object} config
      * @return {String}
      */
-    getUrl (config) {
-        let url = this.baseUrl,
+    getUrl (config, useOAuth) {
+        let url = useOAuth ? this.oauthBaseUrl : this.baseUrl,
             subreddit = this.formatSubreddit(config.subreddit),
             type = config.type,
             count = config.count;

@@ -21,6 +21,10 @@ Module.register('MMM-Reddit', {
         forceImmediateUpdate: true,
         characterLimit: null,
         titleReplacements: [],
+        redditUserAgent: 'MagicMirror:MMM-Reddit:v1.2.1 (by /u/mumblebaj)',
+        redditAccessToken: null,
+        redditClientId: null,
+        redditClientSecret: null,
 
         // Toggles
         showHeader: true,
@@ -151,7 +155,11 @@ Module.register('MMM-Reddit', {
             count: this.config.count,
             imageQuality: this.config.imageQuality,
             characterLimit: this.config.characterLimit,
-            titleReplacements: this.config.titleReplacements
+            titleReplacements: this.config.titleReplacements,
+            redditUserAgent: this.config.redditUserAgent,
+            redditAccessToken: this.config.redditAccessToken,
+            redditClientId: this.config.redditClientId,
+            redditClientSecret: this.config.redditClientSecret
         };
 
         if (this.config.showAll) {
