@@ -3,6 +3,8 @@
 [![Platform](https://img.shields.io/badge/platform-MagicMirror-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
+# Due to Reddit actively blocking Web apps/bots and the old `apps` option no longer available, this module is now unfortunately being retired. The dev branch has been updated to cater for those who may have an active api user. I have not been able to test this as I do not have an app user myself and unable to create one.
+
 ## Support
 If you like the module you can support my work by giving me a star or buy me a coffee.
 
